@@ -48,50 +48,32 @@ if "messages" not in st.session_state:
     ]
 
 if "agent" not in st.session_state:
-    # Default to 'local' provider to avoid quota issues
-    st.session_state.provider = "local"
-    st.session_state.agent = RetailAgent(provider="local")
+    st.session_state.agent = RetailAgent()
 
 # Sidebar
 with st.sidebar:
     st.title("👗 Étoile AI Assistant")
-    
-    # Provider Selection
-    st.subheader("MODEL SETTINGS")
-    selected_provider = st.selectbox(
-        "Reasoning Engine", 
-        options=["local", "gemini", "openai"], 
-        index=0,
-        help="Local uses heuristic logic (No API key required). Gemini and OpenAI require API keys."
-    )
-    
-    if selected_provider != st.session_state.provider:
-        st.session_state.provider = selected_provider
-        st.session_state.agent = RetailAgent(provider=selected_provider)
-        st.success(f"Switched to {selected_provider} engine!")
+    st.info("Local Data-Driven Engine Active")
     
     st.subheader("QUICK EXAMPLES")
     
     examples = [
         {"title": "Modest gown under $300, size 8, on sale", "subtitle": "Shopping"},
         {"title": "Show me evening dresses under $200", "subtitle": "Shopping"},
-        {"title": "Find a long-sleeve dress in size 10", "subtitle": "Shopping"},
+        {"title": "Order O0005 - Can I return this?", "subtitle": "Support"},
         {"title": "What are your bestselling gowns?", "subtitle": "Shopping"},
     ]
     
     for ex in examples:
         if st.button(f"{ex['title']}\n{ex['subtitle']}", key=ex['title']):
             st.session_state.messages.append({"role": "user", "content": ex['title']})
-            if st.session_state.agent:
-                with st.spinner("Thinking..."):
-                    response = st.session_state.agent.run(ex['title'])
-                    st.session_state.messages.append({"role": "assistant", "content": response})
+            with st.spinner("Processing..."):
+                response = st.session_state.agent.run(ex['title'])
+                st.session_state.messages.append({"role": "assistant", "content": response})
             st.rerun()
 
 # Main Header
-col1, col2 = st.columns([2, 1])
-with col2:
-    mode = st.segmented_control("Role", options=["Personal Shopper", "Customer Support"], default="Personal Shopper")
+st.markdown("### Intelligent Retail Assistant")
 
 # Chat Container
 for message in st.session_state.messages:
@@ -104,11 +86,8 @@ if prompt := st.chat_input("Ask me anything..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    if st.session_state.agent:
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                response = st.session_state.agent.run(prompt)
-                st.markdown(response)
-                st.session_state.messages.append({"role": "assistant", "content": response})
-    else:
-        st.error("Agent not initialized. Please check your API key.")
+    with st.chat_message("assistant"):
+        with st.spinner("Processing..."):
+            response = st.session_state.agent.run(prompt)
+            st.markdown(response)
+            st.session_state.messages.append({"role": "assistant", "content": response})

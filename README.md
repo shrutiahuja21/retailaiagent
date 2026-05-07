@@ -1,27 +1,24 @@
 # Retail AI Assistant (Étoile)
 
-An intelligent agentic AI system that simulates a Personal Shopper and Customer Support Assistant for a retail environment. This project uses a modular architecture with structured tool-calling and a local heuristic reasoning engine to ensure reliability and performance.
+An intelligent data-driven AI system that simulates a Personal Shopper and Customer Support Assistant for a retail environment. This project operates entirely **locally** on CSV data, ensuring 100% reliability, zero API costs, and no hallucination.
 
 ## 🚀 Features
 
 - **Personal Shopper (Revenue Agent)**: Recommends products based on constraints like size, price, tags, and sale status. Prioritizes bestsellers and explains recommendations.
-- **Customer Support (Operations Agent)**: Evaluates return eligibility based on a complex policy involving time windows, clearance rules, and vendor exceptions.
-- **Multi-Model Support**:
-  - **Local Engine (Default)**: No-API-key required reasoning using heuristics and regex.
-  - **Gemini 1.5 Flash**: Advanced natural language understanding via Google's generative AI.
-  - **GPT-4o**: High-fidelity reasoning via OpenAI.
-- **Memory Store & Caching**: In-memory caching for product lookups and searches to optimize performance.
-- **Modern Web UI**: Built with Streamlit for a beautiful, responsive experience.
+- **Customer Support (Operations Agent)**: Evaluates return eligibility based on a deterministic policy engine (time windows, clearance rules, vendor exceptions).
+- **Local Reasoning Engine**: No API keys required. Uses heuristic logic and regex to process natural language queries directly against the data store.
+- **Memory Store & Caching**: In-memory caching for high-speed data retrieval.
+- **Modern Web UI**: A clean, responsive interface built with Streamlit.
 
 ## 🛠️ Architecture
 
-The system is built with a clear separation of concerns:
-1. **Data Layer (`data_manager.py`)**: Handles CSV parsing, inventory management, and in-memory caching.
-2. **Tool Layer (`tools.py`)**: Implements the logic for product searching and the rule-based return evaluation engine.
-3. **Agent Layer (`agent.py`)**: Manages intent recognition and model provider orchestration.
-4. **UI Layer (`ui.py` & `main.py`)**: Provides Streamlit web and CLI interfaces.
+The system follows a modular architecture:
+1. **Data Layer (`data_manager.py`)**: CSV parsing and caching.
+2. **Tool Layer (`tools.py`)**: Business logic and policy enforcement.
+3. **Agent Layer (`agent.py`)**: Local intent recognition and reasoning.
+4. **UI Layer (`ui.py` & `main.py`)**: Web and CLI interfaces.
 
-See [architecture.md](architecture.md) for a deep dive into the design decisions.
+See [architecture.md](architecture.md) for more details.
 
 ## 📦 Installation
 
@@ -36,11 +33,7 @@ See [architecture.md](architecture.md) for a deep dive into the design decisions
    pip install -r requirements.txt
    ```
 
-3. (Optional) Set up API keys in a `.env` file:
-   ```env
-   OPENAI_API_KEY=your_openai_key
-   GEMINI_API_KEY=your_gemini_key
-   ```
+**Note**: No API keys or `.env` files are required for this version.
 
 ## 🖥️ Usage
 
@@ -55,9 +48,9 @@ python main.py
 ```
 
 ## 📄 Data Files
-- `product_inventory.csv`: Full list of available items, stock levels, and bestseller scores.
+- `product_inventory.csv`: Full list of available items and stock levels.
 - `orders.csv`: Historical customer orders.
-- `policy.txt`: Plain-text return and exchange policy rules.
+- `policy.txt`: Return and exchange policy rules.
 
 ## ⚖️ License
 MIT
